@@ -8,17 +8,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 
-class ContactsAdapter() : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+class ContactsAdapter : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
     private var oldContactsArray = arrayListOf<Person>()
 
-    class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val avatarContact: ImageView = itemView.findViewById(R.id.photoIv)
-        val nameTv : TextView = itemView.findViewById(R.id.contactName)
+        val nameTv: TextView = itemView.findViewById(R.id.contactName)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false)
+        val itemView =
+            LayoutInflater.from(parent.context).inflate(R.layout.contact_item, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -31,11 +32,12 @@ class ContactsAdapter() : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
         return oldContactsArray.size
     }
 
-    fun setData(newContactsList : ArrayList<Person>) {
-        val diffCallback = PersonDiffUtill(oldContactsArray, newContactsList )
+    fun setData(newContactsList: ArrayList<Person>) {
+        val diffCallback = PersonDiffUtill(oldContactsArray, newContactsList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         oldContactsArray = newContactsList
         diffResult.dispatchUpdatesTo(this)
     }
+
 
 }

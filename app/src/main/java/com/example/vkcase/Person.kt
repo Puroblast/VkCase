@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class Person(
     val name: String,
     val imageSrc: Int,
-    val id : Int,
-    val isMuted: Boolean = false
+    val id: Int,
+    var isMuted: Boolean = false
 
 ) : Parcelable

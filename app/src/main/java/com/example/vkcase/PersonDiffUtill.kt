@@ -2,7 +2,10 @@ package com.example.vkcase
 
 import androidx.recyclerview.widget.DiffUtil
 
-class PersonDiffUtill(private val oldList: ArrayList<Person>, private val newList: ArrayList<Person>) :
+class PersonDiffUtill(
+    private val oldList: ArrayList<Person>,
+    private val newList: ArrayList<Person>
+) :
     DiffUtil.Callback() {
 
 

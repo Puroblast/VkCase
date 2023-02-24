@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
-class ImageAdapter() :
+class ImageAdapter :
     RecyclerView.Adapter<ImageAdapter.ViewHolder>() {
 
     private var oldPersons = arrayListOf<Person>()
@@ -33,7 +33,23 @@ class ImageAdapter() :
         holder.avatarImage.setImageResource(oldPersons[position].imageSrc)
         holder.avatarBackground.setImageDrawable(gradientDrawable(holder))
         holder.nameTv.text = oldPersons[position].name
+        if (oldPersons[position].isMuted) {
+            holder.nameTv.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.mic_off_small_size,
+                0
+            )
+        } else {
+            holder.nameTv.setCompoundDrawablesWithIntrinsicBounds(
+                0,
+                0,
+                R.drawable.mic_small_size,
+                0
+            )
+        }
     }
+
 
     override fun getItemCount(): Int {
         return oldPersons.size
@@ -61,11 +77,12 @@ class ImageAdapter() :
         return newDrawable
     }
 
-    fun setData(newPersonsList : ArrayList<Person>) {
+    fun setData(newPersonsList: ArrayList<Person>) {
         val diffCallback = PersonDiffUtill(oldPersons, newPersonsList)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         oldPersons = newPersonsList
         diffResult.dispatchUpdatesTo(this)
     }
+
 
 }

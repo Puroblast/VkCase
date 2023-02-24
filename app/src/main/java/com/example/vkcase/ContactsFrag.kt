@@ -11,7 +11,7 @@ import java.io.Console
 
 class ContactsFrag : Fragment(R.layout.frag_contacts) {
 
-    private lateinit var binding : FragContactsBinding
+    private lateinit var binding: FragContactsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -20,7 +20,8 @@ class ContactsFrag : Fragment(R.layout.frag_contacts) {
     ): View {
         binding = FragContactsBinding.inflate(inflater, container, false)
         val fragmentLM = LinearLayoutManager(requireContext())
-        val persons = requireArguments().getParcelableArrayList<Person>("persons") as ArrayList<Person>
+        val persons =
+            requireArguments().getParcelableArrayList<Person>("persons") as ArrayList<Person>
 
         binding.fragmentRecycler.layoutManager = fragmentLM
         val contactsAdapter = ContactsAdapter()

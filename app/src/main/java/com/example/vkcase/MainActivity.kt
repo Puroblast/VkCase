@@ -10,13 +10,14 @@ import com.example.vkcase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    private val myId = 1
     private val imgAdapter = ImageAdapter()
     private var persons = arrayListOf(
         Person(
             "Venera Phone Long Contact To Test Again Again Again Again Again",
             R.drawable.anime_avatar,
             1
-        ) ,
+        ),
         Person(
             "Anna",
             R.drawable.avatar_image,
@@ -34,8 +35,8 @@ class MainActivity : AppCompatActivity() {
             override fun canScrollVertically(): Boolean = false
         }
         var cameraFlag = true
-        var microFlag = true
 
+        binding.groupCountTv.text = persons.size.toString()
 
         binding.recyclerView.layoutManager = customLM
         binding.recyclerView.adapter = imgAdapter
@@ -57,15 +58,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.micIb.setOnClickListener {
-            if (microFlag) {
-                binding.micIb.setImageResource(R.drawable.mic_off)
-                binding.micIb.setBackgroundResource(R.drawable.circular_background_white)
-                microFlag = false
-            } else {
-                binding.micIb.setImageResource(R.drawable.mic)
-                binding.micIb.setBackgroundResource(R.drawable.circular_background)
-                microFlag = true
+
+            for (person in persons) {
+                val position = persons.indexOf(person)
+                if (person.id == myId) {
+                    if (person.isMuted) {
+                        binding.micIb.setImageResource(R.drawable.mic)
+                        binding.micIb.setBackgroundResource(R.drawable.circular_background)
+                        person.isMuted = false
+                    } else {
+                        binding.micIb.setImageResource(R.drawable.mic_off)
+                        binding.micIb.setBackgroundResource(R.drawable.circular_background_white)
+                        person.isMuted = true
+                    }
+                    imgAdapter.notifyItemChanged(position)
+                    break
+                }
             }
+
+
         }
 
         binding.handIb.setOnClickListener {
@@ -95,7 +106,6 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
 
     private fun swap() {
         val newPersons = arrayListOf<Person>()
