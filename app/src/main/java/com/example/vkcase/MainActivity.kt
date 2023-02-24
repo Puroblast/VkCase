@@ -3,17 +3,15 @@ package com.example.vkcase
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.vkcase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private val imgAdapter = ImageAdapter()
-    private val persons = arrayListOf(
+    private var persons = arrayListOf(
         Person(
             "Venera Phone Long Contact To Test Again Again Again Again Again",
             R.drawable.anime_avatar,
@@ -100,11 +98,11 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun swap() {
-        val changedPerson = persons[0]
         val newPersons = arrayListOf<Person>()
-        persons[0] = persons[1]
-        persons[1] = changedPerson
         newPersons.addAll(persons)
-        imgAdapter.setData(newPersons)
+        newPersons[0] = persons[1]
+        newPersons[1] = persons[0]
+        persons = newPersons
+        imgAdapter.setData(persons)
     }
 }
