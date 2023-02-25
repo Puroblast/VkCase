@@ -11,7 +11,7 @@ class HelloDialogFragment : DialogFragment() {
             val builder = AlertDialog.Builder(it)
             builder.setTitle("Окно приветствия")
                 .setMessage("Привет")
-                .setPositiveButton("Привет") { dialog, id ->
+                .setPositiveButton("Привет") { dialog, _ ->
                     dialog.cancel()
                 }
             builder.create()

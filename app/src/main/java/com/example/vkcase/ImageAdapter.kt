@@ -33,6 +33,7 @@ class ImageAdapter :
         holder.avatarImage.setImageResource(oldPersons[position].imageSrc)
         holder.avatarBackground.setImageDrawable(gradientDrawable(holder))
         holder.nameTv.text = oldPersons[position].name
+
         if (oldPersons[position].isMuted) {
             holder.nameTv.setCompoundDrawablesWithIntrinsicBounds(
                 0,

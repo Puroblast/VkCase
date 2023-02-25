@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.vkcase.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -24,87 +25,90 @@ class MainActivity : AppCompatActivity() {
             2
         )
     )
-    private lateinit var binding: ActivityMainBinding
+    private val binding: ActivityMainBinding by lazy(LazyThreadSafetyMode.NONE) {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+    private val customLM = object : GridLayoutManager(this, 1) {
+        override fun canScrollVertically(): Boolean = false
+    }
+    private var cameraFlag = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        initView(savedInstanceState)
+
+
+    }
+
+    private fun initView(savedInstanceState: Bundle?) {
         imgAdapter.setData(persons)
-        val customLM = object : GridLayoutManager(this, 1) {
-            override fun canScrollVertically(): Boolean = false
-        }
-        var cameraFlag = true
 
         binding.groupCountTv.text = persons.size.toString()
-
         binding.recyclerView.layoutManager = customLM
         binding.recyclerView.adapter = imgAdapter
+        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
-        binding.sortIb.setOnClickListener {
-            swap()
-        }
+        binding.sortIb.setOnClickListener { swap() }
+        binding.cameraIb.setOnClickListener { changeCameraState() }
+        binding.micIb.setOnClickListener { changeMicState() }
+        binding.handIb.setOnClickListener { showDialogFragment() }
+        binding.cancelIb.setOnClickListener { finish() }
+        binding.chatIb.setOnClickListener { goToMessages() }
+        binding.groupIb.setOnClickListener { goToGroupPart(savedInstanceState) }
+    }
 
-        binding.cameraIb.setOnClickListener {
-            if (cameraFlag) {
-                binding.cameraIb.setImageResource(R.drawable.videocam_off)
-                binding.cameraIb.setBackgroundResource(R.drawable.circular_background_white)
-                cameraFlag = false
-            } else {
-                binding.cameraIb.setImageResource(R.drawable.videocam)
-                binding.cameraIb.setBackgroundResource(R.drawable.circular_background)
-                cameraFlag = true
+    private fun goToGroupPart(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            val bundle = Bundle()
+            bundle.putParcelableArrayList("persons", persons)
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add<ContactsFrag>(binding.container.id, args = bundle)
             }
         }
+    }
 
-        binding.micIb.setOnClickListener {
+    private fun goToMessages() {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_APP_MESSAGING)
+        startActivity(intent)
+    }
 
-            for (person in persons) {
-                val position = persons.indexOf(person)
-                if (person.id == myId) {
-                    if (person.isMuted) {
-                        binding.micIb.setImageResource(R.drawable.mic)
-                        binding.micIb.setBackgroundResource(R.drawable.circular_background)
-                        person.isMuted = false
-                    } else {
-                        binding.micIb.setImageResource(R.drawable.mic_off)
-                        binding.micIb.setBackgroundResource(R.drawable.circular_background_white)
-                        person.isMuted = true
-                    }
-                    imgAdapter.notifyItemChanged(position)
-                    break
+    private fun showDialogFragment() {
+        val helloDialogFragment = HelloDialogFragment()
+        helloDialogFragment.show(supportFragmentManager, "Hello")
+    }
+
+    private fun changeMicState() {
+        for (person in persons) {
+            val position = persons.indexOf(person)
+            if (person.id == myId) {
+                if (person.isMuted) {
+                    binding.micIb.setImageResource(R.drawable.mic)
+                    binding.micIb.setBackgroundResource(R.drawable.circular_background)
+                    person.isMuted = false
+                } else {
+                    binding.micIb.setImageResource(R.drawable.mic_off)
+                    binding.micIb.setBackgroundResource(R.drawable.circular_background_white)
+                    person.isMuted = true
                 }
-            }
-
-
-        }
-
-        binding.handIb.setOnClickListener {
-            val helloDialogFragment = HelloDialogFragment()
-            helloDialogFragment.show(supportFragmentManager, "Hello")
-        }
-
-        binding.cancelIb.setOnClickListener {
-            finish()
-        }
-
-        binding.chatIb.setOnClickListener {
-            val intent = Intent(Intent.ACTION_MAIN)
-            intent.addCategory(Intent.CATEGORY_APP_MESSAGING)
-            startActivity(intent)
-        }
-
-        binding.groupIb.setOnClickListener {
-            if (savedInstanceState == null) {
-                val bundle = Bundle()
-                bundle.putParcelableArrayList("persons", persons)
-                supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    add<ContactsFrag>(binding.container.id, args = bundle)
-                }
+                imgAdapter.notifyItemChanged(position)
+                break
             }
         }
+    }
 
+    private fun changeCameraState() {
+        if (cameraFlag) {
+            binding.cameraIb.setImageResource(R.drawable.videocam_off)
+            binding.cameraIb.setBackgroundResource(R.drawable.circular_background_white)
+            cameraFlag = false
+        } else {
+            binding.cameraIb.setImageResource(R.drawable.videocam)
+            binding.cameraIb.setBackgroundResource(R.drawable.circular_background)
+            cameraFlag = true
+        }
     }
 
     private fun swap() {
