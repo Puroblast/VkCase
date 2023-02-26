@@ -37,25 +37,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initView(savedInstanceState)
-
-
     }
 
     private fun initView(savedInstanceState: Bundle?) {
         imgAdapter.setData(persons)
+        with(binding) {
+            groupCountTv.text = persons.size.toString()
+            recyclerView.layoutManager = customLM
+            recyclerView.adapter = imgAdapter
+            (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
+                false
+            setClicks(savedInstanceState)
+        }
+    }
 
-        binding.groupCountTv.text = persons.size.toString()
-        binding.recyclerView.layoutManager = customLM
-        binding.recyclerView.adapter = imgAdapter
-        (binding.recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-
-        binding.sortIb.setOnClickListener { swap() }
-        binding.cameraIb.setOnClickListener { changeCameraState() }
-        binding.micIb.setOnClickListener { changeMicState() }
-        binding.handIb.setOnClickListener { showDialogFragment() }
-        binding.cancelIb.setOnClickListener { finish() }
-        binding.chatIb.setOnClickListener { goToMessages() }
-        binding.groupIb.setOnClickListener { goToGroupPart(savedInstanceState) }
+    private fun ActivityMainBinding.setClicks(savedInstanceState: Bundle?) {
+        sortIb.setOnClickListener { swap() }
+        cameraIb.setOnClickListener { changeCameraState() }
+        micIb.setOnClickListener { changeMicState() }
+        handIb.setOnClickListener { showDialogFragment() }
+        cancelIb.setOnClickListener { finish() }
+        chatIb.setOnClickListener { goToMessages() }
+        groupIb.setOnClickListener { goToGroupPart(savedInstanceState) }
     }
 
     private fun goToGroupPart(savedInstanceState: Bundle?) {
